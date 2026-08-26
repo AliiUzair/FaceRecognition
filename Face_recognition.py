@@ -2,31 +2,36 @@ import cv2
 import numpy as np
 import face_recognition as fr
 import os
+import pickle
 
 path = r"C:\Users\au773\Documents\VS Code\FaceRecognition\knownfaces"
-images =[]  #Images in the folder
-img_names = []  #Nmaes of the People
 titles = os.listdir(path) #Names of the images along with jpg
 
+# Load existing file if it exists, otherwise start with empty lists
+if os.path.exists("trained_faces.pkl"):
+    with open("trained_faces.pkl", "rb") as f:
+        list_encode, img_names = pickle.load(f)
+else:
+    list_encode = []
+    img_names = []
+
+# Change 3: Look through your folder but only process brand new images
+updated = False
 for cls in titles:
-    curr_img = cv2.imread(f'{path}/{cls}') #Picks the current image in the lsit
-    images.append(curr_img) #appends in the img_names list
-    img_names.append(os.path.splitext(cls)[0]) #removes.jpg o any extension
-
-def encodings(images):
-    encodelist = []
-
-    for img in images:
-        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-        encode = fr.face_encodings(img)
-
+    name = os.path.splitext(cls)[0]  # Kept exactly [0] indexing for clean names
+    if name not in img_names:       # Skip if name is already inside the saved list
+        curr_img = cv2.imread(f'{path}/{cls}') 
+        img_rgb = cv2.cvtColor(curr_img, cv2.COLOR_BGR2RGB)
+        encode = fr.face_encodings(img_rgb)
         if len(encode) > 0:
-            encodelist.append(encode[0])
-        else:
-            print("No face found in image")
+            list_encode.append(encode[0])
+            img_names.append(name)
+            updated = True
 
-    return encodelist
-list_encode = encodings(images)
+#Save the list to your hard drive if a new image was added
+if updated:
+    with open("trained_faces.pkl", "wb") as f:
+        pickle.dump([list_encode, img_names], f)
 
 cap = cv2.VideoCapture(0)
 process_this_frame = True
