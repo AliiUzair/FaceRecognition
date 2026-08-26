@@ -30,7 +30,8 @@ list_encode = encodings(images)
 
 cap = cv2.VideoCapture(0)
 
-def recognize(frame):
+while True:
+    success, frame = cap.read()
     imgS = cv2.resize(frame,(0,0),None,fx=0.25,fy=0.25)  #just for speeding the process
     imgS = cv2.cvtColor(imgS,cv2.COLOR_BGR2RGB)
     frame_loc = fr.face_locations(imgS)
@@ -52,10 +53,10 @@ def recognize(frame):
             name = "Unknown"
             y1,x2,y2,x1 = loc
             y1,x2,y2,x1 = y1*4,x2*4,y2*4,x1*4
-            cv2.rectangle(frame,(x1,y1),(x2,y2),(0,255,0),2)
-            cv2.rectangle(frame,(x1,y2+30),(x2,y2),(0,255,0),cv2.FILLED)
+            cv2.rectangle(frame,(x1,y1),(x2,y2),(0,0,255),2)
+            cv2.rectangle(frame,(x1,y2+30),(x2,y2),(0,0,255),cv2.FILLED)
             cv2.putText(frame,name,(x1+6,y2+25),cv2.FONT_HERSHEY_COMPLEX,1,(255,255,255),2)
-    return frame,name
-    
+    cv2.imshow("Webcam",frame)
+    cv2.waitKey(1)    
    
    
