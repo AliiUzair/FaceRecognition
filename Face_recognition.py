@@ -3,7 +3,7 @@ import numpy as np
 import face_recognition as fr
 import os
 
-path = r"C:\Users\au773\Desktop\Test Images"
+path = r"C:\Users\au773\Documents\VS Code\FaceRecognition\knownfaces"
 images =[]  #Images in the folder
 img_names = []  #Nmaes of the People
 titles = os.listdir(path) #Names of the images along with jpg
