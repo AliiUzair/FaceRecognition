@@ -2,7 +2,7 @@ import cv2
 import tkinter as tk
 from PIL import Image, ImageTk
 
-from recognition import recognize
+from Face_recognition import recognize
 
 
 def start_gui():
